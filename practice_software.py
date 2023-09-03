@@ -65,6 +65,7 @@ class NewLoop(PyGameLoop):
         # Initialize
         if RECORD_EVENTS:
             self.event_recorder = EventRecorder()
+            self.event_recorder.set_save_path("logs")
             self.event_recorder.record_experiment_details(
                 [
                     ["status_change", "program_start"],
@@ -95,7 +96,7 @@ class NewLoop(PyGameLoop):
         # Load in question-answer-response data
         qar_history = []
 
-        history_files = glob.glob("*_question_answer.log")
+        history_files = glob.glob("logs/*_question_answer.log")
         for history_file in history_files:
             with open(history_file, "r") as f:  # , encoding="utf-8-sig"
                 qar_history.extend(list(csv.reader(f)))

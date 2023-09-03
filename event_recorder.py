@@ -6,6 +6,7 @@ Created on Tue Aug 29 11:20:15 2023
 """
 import time
 import datetime
+import os
 
 
 class EventRecorder:
@@ -18,7 +19,11 @@ class EventRecorder:
         self.showing_record = []
         self.question_answer_record = []
         self.experiment_record = []
+        self.path = None
         self.date_str = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    def set_save_path(self, path):
+        self.path = path
 
     def record_keystroke(self, key):
         # Record the keystroke
@@ -61,19 +66,23 @@ class EventRecorder:
                 )
 
     def save(self):
+        if self.path is None:
+            prefix = self.date_str
+        else:
+            prefix = self.path + os.sep + self.date_str
         # Save the keystroke, word showing, and word answering.
-        with open(self.date_str + "_keystroke_record.log", "w") as f:
+        with open(prefix + "_keystroke_record.log", "w") as f:
             for keystroke in self.keystroke_record:
                 f.write(str(keystroke[1]) + "," + str(keystroke[0]) + "\n")
-        with open(self.date_str + "_event_record.log", "w") as f:
+        with open(prefix + "_event_record.log", "w") as f:
             for event in self.showing_record:
                 f.write(str(event[1]) + "," + str(event[0]) + "\n")
-        with open(self.date_str + "_question_answer.log", "w") as f:
+        with open(prefix + "_question_answer.log", "w") as f:
             for qa_data in self.question_answer_record:
                 f.write(
                     ",".join([str(qa_data[ii]) for ii in range(len(qa_data))])
                     + "\n"
                 )
-        with open(self.date_str + "_experiment.log", "w") as f:
+        with open(prefix + "_experiment.log", "w") as f:
             for line in self.experiment_record:
                 f.write(str(line[0]) + "," + str(line[1]) + "\n")
